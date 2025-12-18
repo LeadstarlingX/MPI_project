@@ -80,14 +80,16 @@
 #include <ctime>
 #include <mpi.h>
 
+#ifndef TOTAL_ELEMENTS
+#define TOTAL_ELEMENTS 1000
+#endif
+
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
 
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    const int TOTAL_ELEMENTS = 1000;
     
     // Calculate elements per process 
     // Assuming size divides 1000 evenly for simplicity as per user's last edit
