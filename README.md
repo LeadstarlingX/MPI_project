@@ -57,5 +57,17 @@ Open a terminal in the project directory and run:
     .\clean.bat
     ```
 
+## Troubleshooting & Compatibility
+
+During development, we encountered a known compatibility issue between **g++** and **Microsoft MPI**. Microsoft's header files (`mpi.h`) use proprietary **SAL (Source Annotation Language)** keywords that standard compilers like `g++` do not recognize.
+
+### Diagnostic Scripts
+We included two scripts in the `troubleshooting/` directory to help verify your environment:
+
+1.  **[test_compiler.cpp](file:///d:/CodingProjects/Antigravity/MPI/troubleshooting/test_compiler.cpp)**: A simple "Hello World" to confirm that your `g++` compiler is installed and working correctly.
+2.  **[minimal_test.cpp](file:///d:/CodingProjects/Antigravity/MPI/troubleshooting/minimal_test.cpp)**: A bare-minimum MPI program used to test linkage and verify that the `MSMPI_NO_SAL` macro fix successfully bridges the compatibility gap.
+
+If you encounter "unknown type" errors during compilation, first ensure that the `MSMPI_NO_SAL` macro is defined before including `mpi.h` (this is already handled in the main source and the provided Makefile).
+
 ## GitHub Short Description
 > A C++ MPI project that distributes a random array among multiple processes to calculate local and global averages, featuring compatibility fixes for g++ on Windows.
