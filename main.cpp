@@ -105,6 +105,8 @@ int main(int argc, char** argv) {
         }
     }
 
+    double start_time = MPI_Wtime();
+
     // Step 1: Distribute elements
     MPI_Scatter(rank == 0 ? full_array.data() : nullptr, 
                 elements_per_proc, 
@@ -115,32 +117,28 @@ int main(int argc, char** argv) {
                 0, 
                 MPI_COMM_WORLD);
 
-    std::cout << "[Rank " << rank << "] received " << elements_per_proc << " elements. First 5: ";
-    for (int i = 0; i < 5 && i < elements_per_proc; ++i) {
-        std::cout << local_elements[i] << (i == 4 || i == elements_per_proc - 1 ? "" : ", ");
-    }
-    std::cout << " ... " << std::endl;
+    // Reduced verbosity for performance tests
+    // std::cout << "[Rank " << rank << "] received " << elements_per_proc << " elements. First 5: "; ...
 
     // Step 2: Calculate local average
     long local_sum = 0;
     for (int val : local_elements) {
         local_sum += val;
     }
-    double local_avg = (double)local_sum / elements_per_proc;
-
-    std::cout << "[Rank " << rank << "] Local sum = " << local_sum 
-              << ", Local Average = " << local_avg << std::endl;
 
     // Step 3: Calculate global average
     long global_sum = 0;
     MPI_Reduce(&local_sum, &global_sum, 1, MPI_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
 
+    double end_time = MPI_Wtime();
+
     if (rank == 0) {
         double global_avg = (double)global_sum / TOTAL_ELEMENTS;
-        std::cout << "\n--------------------------------------------------" << std::endl;
-        std::cout << "Global Average (Calculated at Rank 0) = " << global_avg << std::endl;
-        std::cout << "Total elements processed = " << TOTAL_ELEMENTS << std::endl;
-        std::cout << "--------------------------------------------------" << std::endl;
+        std::cout << "\n==================================================" << std::endl;
+        std::cout << " PERFORMANCE RESULTS (Processes: " << size << ")" << std::endl;
+        std::cout << " Execution Time:   " << (end_time - start_time) << " seconds" << std::endl;
+        std::cout << " Global Average:   " << global_avg << std::endl;
+        std::cout << "==================================================" << std::endl;
     }
 
     MPI_Finalize();

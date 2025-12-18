@@ -57,6 +57,12 @@ Open a terminal in the project directory and run:
     .\clean.bat
     ```
 
+## Performance Analysis
+
+We conducted experiments to measure the execution time with different numbers of processes (1, 2, 4, and 8). Due to the small problem size (1,000 elements), the results highlight the impact of MPI communication overhead over computational gain.
+
+*   **[PERFORMANCE.md](PERFORMANCE.md)**: Detailed experimental results and scaling analysis.
+
 ## Troubleshooting & Compatibility
 
 During development, we encountered a known compatibility issue between **g++** and **Microsoft MPI**. Microsoft's header files (`mpi.h`) use proprietary **SAL (Source Annotation Language)** keywords that standard compilers like `g++` do not recognize.
