@@ -49,6 +49,20 @@ int main(int argc, char** argv) {
     std::cout << "Rank " << rank << ": Local sum = " << local_sum 
               << ", Local Average = " << local_avg << std::endl;
 
+    // Step 3: Calculate global average
+    // Note: The global average is global_sum / total_elements, 
+    // NOT the average of the local averages.
+    long global_sum = 0;
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        double global_avg = (double)global_sum / TOTAL_ELEMENTS;
+        std::cout << "\n--------------------------------------------------" << std::endl;
+        std::cout << "Global Average (Calculated at Rank 0) = " << global_avg << std::endl;
+        std::cout << "Total elements processed = " << TOTAL_ELEMENTS << std::endl;
+        std::cout << "--------------------------------------------------" << std::endl;
+    }
+
     MPI_Finalize();
     return 0;
 }
