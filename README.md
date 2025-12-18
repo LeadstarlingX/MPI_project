@@ -27,13 +27,20 @@ To build and run this project, you need:
     *   Download both `msmpisetup.exe` (Runtime) and `msmpisdk.msi` (SDK).
     *   [Download Link (Official Microsoft Site)](https://www.microsoft.com/en-us/download/details.aspx?id=100593)
 
-## How to Run
+### 1. Configure Makefile Paths (Mandatory)
+Before building, you must verify that the paths in the `Makefile` match your local installation of Microsoft MPI. 
 
-1.  **Build**:
-    Open a terminal (PowerShell or CMD) in the project directory and run:
-    ```bash
-    mingw32-make
-    ```
+Open the `Makefile` and update the following lines if necessary:
+- `CXXFLAGS`: Ensure `-I` points to the `Include` directory of your MS-MPI SDK.
+- `LDFLAGS`: Ensure `-L` points to the `Lib\x86` directory of your MS-MPI SDK.
+
+> [!NOTE]
+> The default paths in the Makefile are:
+> - Include: `C:\Program Files (x86)\Microsoft SDKs\MPI\Include`
+> - Lib (32-bit): `C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x86`
+
+### 2. Build and Run
+Open a terminal in the project directory and run:
 
 2.  **Execute**:
     Run with 4 processes (default configuration):
