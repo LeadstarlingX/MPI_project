@@ -33,7 +33,21 @@ int main(int argc, char** argv) {
     MPI_Scatter(full_array.data(), elements_per_proc, MPI_INT,
                 local_elements.data(), elements_per_proc, MPI_INT, 0, MPI_COMM_WORLD);
 
-    std::cout << "Rank " << rank << " received " << elements_per_proc << " elements." << std::endl;
+    std::cout << "Rank " << rank << " received: ";
+    for (int i = 0; i < elements_per_proc; ++i) {
+        std::cout << local_elements[i] << (i == elements_per_proc - 1 ? "" : ", ");
+    }
+    std::cout << std::endl;
+
+    // Step 2: Calculate local average
+    long local_sum = 0;
+    for (int val : local_elements) {
+        local_sum += val;
+    }
+    double local_avg = (double)local_sum / elements_per_proc;
+
+    std::cout << "Rank " << rank << ": Local sum = " << local_sum 
+              << ", Local Average = " << local_avg << std::endl;
 
     MPI_Finalize();
     return 0;
